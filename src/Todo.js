@@ -14,10 +14,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { query, collection, getDocs, where } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import Cookies from "js-cookie";
 
 function ToDo() {
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState(Cookies.get("filter") || "all");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -34,6 +35,10 @@ function ToDo() {
     fetchUserName();
     fetchUserTasks();
   }, [user, loading]);
+
+  useEffect(() => {
+    Cookies.set("setFilter", setFilter);
+  }, [setFilter]);
 
   const fetchUserName = async () => {
     try {
@@ -428,3 +433,4 @@ function ToDo() {
 }
 
 export default ToDo;
+
